@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref, watch } from "vue";
+import { computed, defineAsyncComponent } from "vue";
 import ruRU from "ant-design-vue/es/locale/ru_RU";
 import { useRoute } from "vue-router";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { useUserStore } from "@/entities/user";
 
 dayjs.locale("ru");
-dayjs.extend(relativeTime);
 
 const route = useRoute();
-const { fetchGetAccount } = useUserStore();
 
 const layouts = {
   auth: defineAsyncComponent(() => import("./layouts/AuthLayout.vue")),
@@ -22,15 +18,6 @@ const layout = computed(() => {
   const layoutName = route.meta.layout as keyof typeof layouts;
   return layouts[layoutName] ?? layouts.main;
 });
-
-const isAccountLoad = ref(false);
-
-watch(
-  () => route.meta.auth,
-  () => {
-    if (!isAccountLoad.value && route.meta.auth === true) fetchGetAccount();
-  }
-);
 </script>
 
 <template>
